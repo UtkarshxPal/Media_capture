@@ -1,0 +1,17 @@
+# dependencies
+/node_modules
+
+# environment variables
+.env
+
+# logs
+*.log
+npm-debug.log*
+
+# uploads directory content
+/uploads/*
+!uploads/.gitkeep
+
+# misc
+.DS_Store
+coverage
