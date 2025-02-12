@@ -4,17 +4,22 @@ const cors = require("cors");
 const morgan = require("morgan");
 const dotenv = require("dotenv");
 const path = require("path");
+const fs = require("fs");
 
-// Load environment variables
 dotenv.config();
 
 const app = express();
+
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(uploadDir));
 
 // Connect to MongoDB
 mongoose
