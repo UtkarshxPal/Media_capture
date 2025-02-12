@@ -12,7 +12,7 @@ import {
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://media-capture-hg6m.onrender.com";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -34,9 +34,9 @@ const Dashboard = () => {
 
   const fetchMedia = async () => {
     try {
-      let url = "http://localhost:5000/api/media";
+      let url = `${BASE_URL}/api/media`;
       if (activeFilter !== "all") {
-        url = `http://localhost:5000/api/media/type/${activeFilter}`;
+        url = `${BASE_URL}/api/media/type/${activeFilter}`;
       }
 
       const response = await axios.get(url, {
@@ -308,13 +308,13 @@ const Dashboard = () => {
         <Modal.Body>
           {selectedMedia?.fileType === "image" ? (
             <img
-              src={`http://localhost:5000/${selectedMedia?.filePath}`}
+              src={`${BASE_URL}/${selectedMedia?.filePath}`}
               alt={selectedMedia?.title}
               style={{ width: "100%" }}
             />
           ) : (
             <video
-              src={`http://localhost:5000/${selectedMedia?.filePath}`}
+              src={`${BASE_URL}/${selectedMedia?.filePath}`}
               controls
               style={{ width: "100%" }}
             />

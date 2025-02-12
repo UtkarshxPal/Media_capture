@@ -1,66 +1,69 @@
-import { createContext, useState, useContext, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import axios from 'axios';
+import { createContext, useState, useContext, useEffect } from "react";
+import PropTypes from "prop-types";
+import axios from "axios";
 
 const AuthContext = createContext(null);
-
+const BASE_URL = "https://media-capture-hg6m.onrender.com";
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
-      const userData = JSON.parse(localStorage.getItem('user'));
+      const userData = JSON.parse(localStorage.getItem("user"));
       setUser(userData);
     }
     setLoading(false);
   }, []);
 
-   async function login(email, password) {
+  async function login(email, password) {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/login', {
+      const response = await axios.post(`${BASE_URL}/api/auth/login`, {
         email,
-        password
+        password,
       });
-      
+
       const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
       return { success: true };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'An error occurred during login' 
+      return {
+        success: false,
+        error:
+          error.response?.data?.message || "An error occurred during login",
       };
     }
-  };
+  }
 
   const register = async (username, email, password) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', {
+      const response = await axios.post(`${BASE_URL}/api/auth/register`, {
         username,
         email,
-        password
+        password,
       });
-      
+
       const { token, user } = response.data;
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem("token", token);
+      localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
       return { success: true };
     } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || 'An error occurred during registration' 
+      return {
+        success: false,
+        error:
+          error.response?.data?.message ||
+          "An error occurred during registration",
       };
     }
   };
 
   const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
   };
 
@@ -76,13 +79,13 @@ export const AuthProvider = ({ children }) => {
 };
 
 AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 };
