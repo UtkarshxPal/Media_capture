@@ -1,39 +1,34 @@
-// Import required dependencies
-const router = require("express").Router();
-const multer = require("multer");  
-const path = require("path");      
-const fs = require("fs");          
-const auth = require("../middleware/auth");  
-const Media = require("../models/Media");    
+const mediaRouter = require("express").Router();
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const auth = require("../middleware/auth");
+const Media = require("../models/Media");
 
 // Configure multer storage settings
 const storage = multer.diskStorage({
- 
   destination: (req, file, cb) => {
-    cb(null, "uploads/"); 
+    cb(null, "uploads/");
   },
-  
+
   filename: (req, file, cb) => {
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
-
 
 const fileFilter = (req, file, cb) => {
   if (
     file.mimetype.startsWith("image/") ||
     file.mimetype.startsWith("video/")
   ) {
-    cb(null, true); 
+    cb(null, true);
   } else {
-    
     cb(
       new Error("Invalid file type. Only images and videos are allowed."),
       false
     );
   }
 };
-
 
 const upload = multer({
   storage: storage,
@@ -43,15 +38,12 @@ const upload = multer({
   },
 });
 
-
-router.post("/upload", auth, upload.single("file"), async (req, res) => {
+mediaRouter.post("/upload", auth, upload.single("file"), async (req, res) => {
   try {
-    
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
 
-  
     const savedMedia = await Media.create({
       title: req.body.title || req.file.originalname,
       fileType: req.file.mimetype.startsWith("image/") ? "image" : "video",
@@ -65,7 +57,7 @@ router.post("/upload", auth, upload.single("file"), async (req, res) => {
 });
 
 // Get user's media
-router.get("/", auth, async (req, res) => {
+mediaRouter.get("/", auth, async (req, res) => {
   try {
     const media = await Media.find({ user: req.user }).sort({ createdAt: -1 });
     res.json(media);
@@ -75,9 +67,8 @@ router.get("/", auth, async (req, res) => {
 });
 
 // Delete media
-router.delete("/:id", auth, async (req, res) => {
+mediaRouter.delete("/:id", auth, async (req, res) => {
   try {
-   
     const media = await Media.findOne({ _id: req.params.id, user: req.user });
 
     if (!media) {
@@ -98,8 +89,7 @@ router.delete("/:id", auth, async (req, res) => {
   }
 });
 
-
-router.get("/type/:type", auth, async (req, res) => {
+mediaRouter.get("/type/:type", auth, async (req, res) => {
   try {
     // Find all media belonging to the authenticated user
     const media = await Media.find({
@@ -113,4 +103,4 @@ router.get("/type/:type", auth, async (req, res) => {
   }
 });
 
-module.exports = router;
+module.exports = mediaRouter;

@@ -13,6 +13,7 @@ import { useAuth } from "../context/AuthContext";
 import axios from "axios";
 
 const BASE_URL = "https://media-capture-hg6m.onrender.com";
+// const BASE_URL = "http://localhost:5000";
 
 const Dashboard = () => {
   const { user, logout } = useAuth();

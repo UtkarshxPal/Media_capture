@@ -5,6 +5,8 @@ const morgan = require("morgan");
 const dotenv = require("dotenv");
 const path = require("path");
 const fs = require("fs");
+const authRouter = require("./routes/auth");
+const mediaRouter = require("./routes/media");
 
 dotenv.config();
 
@@ -31,8 +33,8 @@ mongoose
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Routes
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/media", require("./routes/media"));
+app.use("/api/auth", authRouter);
+app.use("/api/media", mediaRouter);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

@@ -4,6 +4,8 @@ import axios from "axios";
 
 const AuthContext = createContext(null);
 const BASE_URL = "https://media-capture-hg6m.onrender.com";
+// const BASE_URL = "http://localhost:5000";
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
