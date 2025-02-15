@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Form, Button, Alert, Card } from "react-bootstrap";
-import { set } from "mongoose";
 
 const Login = () => {
   const [email, setEmail] = useState("");
