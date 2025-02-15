@@ -1,31 +1,35 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { Form, Button, Alert, Card } from 'react-bootstrap';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { Form, Button, Alert, Card } from "react-bootstrap";
 
 const Register = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { register } = useAuth();
+  const [isLoading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    
+    setError("");
+
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
+      setError("Passwords do not match");
       return;
     }
 
     try {
+      setLoading(true);
       await register(name, email, password);
-      navigate('/login');
+      navigate("/login");
     } catch (err) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(err.response?.data?.message || "Registration failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,10 +85,10 @@ const Register = () => {
             </Form.Group>
 
             <Button variant="primary" type="submit" className="w-100 mb-3">
-              Register
+              {isLoading ? "Loading..." : "Register"}
             </Button>
           </Form>
-          
+
           <div className="text-center">
             <p className="mb-0">
               Already have an account? <Link to="/login">Login here</Link>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Form, Button, Alert, Card } from "react-bootstrap";
+import { set } from "mongoose";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -9,12 +10,13 @@ const Login = () => {
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
-
+  const [isLoading, setLoading] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
+      setLoading(true);
       const res = await login(email, password);
       if (res.error) {
         setError(res.error);
@@ -23,6 +25,8 @@ const Login = () => {
       navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,7 +60,7 @@ const Login = () => {
             </Form.Group>
 
             <Button variant="primary" type="submit" className="w-100 mb-3">
-              Login
+              {isLoading ? "Loading..." : "Login"}
             </Button>
           </Form>
 
